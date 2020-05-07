@@ -9,8 +9,8 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
- * 每个DefaultFuture对应一个请求，其中request和response是通过id字段判定对应关系的
- * 此处用了锁的机制，保证并发时请求和响应的一致性
+ * 每个DefaultFuture对应处理一次请求，其中request和response是通过id字段判定对应关系的
+ * 此处用了锁的机制，保证了线程安全
  *
  * @author Zidane
  * @since 2019-08-26
@@ -38,6 +38,7 @@ public class DefaultFuture {
     public Response get() {
         lock.lock();
         try {
+            // 判断是否获取到响应，如果没有获取到则等待
             while (!done()) {
                 condition.await();
             }
@@ -49,12 +50,19 @@ public class DefaultFuture {
         return response;
     }
 
+    /**
+     * 获取对应future的响应消息
+     *
+     * @param response  服务端响应
+     */
     public static void receive(Response response) {
+        // 根据ID获取对应的future
         DefaultFuture df = ALL_DEFAULT_FUTRUE.get(response.getId());
         if (df != null) {
             Lock lock = df.lock;
             lock.lock();
             try {
+                // 当获取到响应后，唤醒get方法，返回对应的响应信息
                 df.setResponse(response);
                 df.condition.signal();
                 ALL_DEFAULT_FUTRUE.remove(df);

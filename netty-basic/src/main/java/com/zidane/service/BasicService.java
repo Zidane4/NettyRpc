@@ -9,7 +9,7 @@ import com.alibaba.fastjson.JSONObject;
 import org.springframework.stereotype.Service;
 
 /**
- * 功能描述
+ * 第三方调用服务测试类
  *
  * @author Zidane
  * @since 2019-08-31

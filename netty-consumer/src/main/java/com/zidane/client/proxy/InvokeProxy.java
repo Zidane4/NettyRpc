@@ -19,7 +19,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 /**
- * 利用spring框架，对指定服务进行拦截处理，将服务调用转化为netty可以传送的请求，然后发送给服务器
+ * 利用spring框架，对指定服务进行拦截处理，将服务调用根据协议进行转化，然后发送给服务器
  *
  * @author Zidane
  * @since 2019-08-28
@@ -69,7 +69,7 @@ public class InvokeProxy implements BeanPostProcessor {
     }
 
     /**
-     * 将属性（被RemoteInvoke注解的属性）的所有方法和属性对应的接口类型对应存入到Map中
+     * 将属性（被Remote注解的属性）的所有方法和属性对应的接口类型对应存入到Map中
      * 本系统中此属性对应的是UserRemote
      *
      * @param methodClassMap    方法和接口对应的Map
